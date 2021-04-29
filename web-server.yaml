@@ -1,0 +1,35 @@
+- hosts: webserver
+  become: yes
+  vars_files:
+  - "vars/{{ ansible_facts['os_family'] }}.yaml"
+  tasks:
+  - name: Installing Apache Web Server
+    package:
+      name: "{{ apache }}"
+      state: present
+
+  - name: Installing Vim
+    package:
+      name: vim
+      state: present
+
+  - name: Installing PHP
+    package:
+      name: php
+      state: present
+
+  - name: Installing NetTools
+    package: 
+      name: net-tools 
+      state: present
+
+  - name: Starting Web Server
+    service:
+      name: "{{ apache }}" 
+      state: started
+      enabled: yes
+    
+  - name: Copy the home page content
+    template:
+      src: "{{ playbook_dir }}/index.php"
+      dest: "/var/www/html"
